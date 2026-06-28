@@ -12,6 +12,33 @@ const BLOCKED_PATTERNS = [
   "bit.ly/free", "torrent"
 ];
 
+function maskEmail(email){
+  if(!email) return "";
+  const parts = email.split("@");
+  if(parts.length !== 2) return email;
+  const [user, domain] = parts;
+  const visible = user.slice(0, 2);
+  const masked = visible + "*".repeat(Math.max(user.length - 2, 1));
+  return masked + "@" + domain;
+}
+
+function getYoutubeThumbnail(url){
+  try{
+    const u = new URL(url);
+    if(!/youtube\.com|youtu\.be/i.test(u.hostname)) return null;
+    let videoId = null;
+    if(u.hostname.includes("youtu.be")){
+      videoId = u.pathname.slice(1).split("/")[0];
+    } else if(u.pathname.startsWith("/shorts/")){
+      videoId = u.pathname.split("/shorts/")[1].split("/")[0];
+    } else {
+      videoId = u.searchParams.get("v");
+    }
+    if(!videoId) return null;
+    return "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+  } catch(e){ return null; }
+}
+
 function isSafeLink(url){
   if(!url) return false;
   const lower = url.toLowerCase();
@@ -62,7 +89,8 @@ async function loadMemes(){
     const items = rows
       .map(r => ({
         timestamp: r[0],
-        link: (r.find(v => v && v.trim().toLowerCase().startsWith("http")) || "").trim()
+        link: (r.find(v => v && v.trim().toLowerCase().startsWith("http")) || "").trim(),
+        email: (r.find(v => v && /\S+@\S+\.\S+/.test(v)) || "").trim()
       }))
       .filter(r => isWithinTodayAndWindow(r.timestamp))
       .filter(r => isSafeLink(r.link));
@@ -74,12 +102,34 @@ async function loadMemes(){
       statusEl.textContent = items.length + " meme(s) mile.";
       items.reverse().forEach(item => {
         const li = document.createElement("li");
+
+        const thumbUrl = getYoutubeThumbnail(item.link);
+        if(thumbUrl){
+          const img = document.createElement("img");
+          img.src = thumbUrl;
+          img.alt = "preview";
+          img.className = "meme-thumb";
+          li.appendChild(img);
+        }
+
+        const info = document.createElement("div");
+        info.className = "meme-info";
+
         const a = document.createElement("a");
         a.href = item.link;
         a.textContent = item.link;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
-        li.appendChild(a);
+        info.appendChild(a);
+
+        if(item.email){
+          const emailEl = document.createElement("div");
+          emailEl.className = "meme-email";
+          emailEl.textContent = maskEmail(item.email);
+          info.appendChild(emailEl);
+        }
+
+        li.appendChild(info);
         listEl.appendChild(li);
       });
     }
