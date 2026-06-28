@@ -39,6 +39,26 @@ function getYoutubeThumbnail(url){
   } catch(e){ return null; }
 }
 
+function getClickedKey(){
+  const d = new Date();
+  return "clickedMemes_" + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+}
+
+function getClickedSet(){
+  try{
+    const raw = localStorage.getItem(getClickedKey());
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch(e){ return new Set(); }
+}
+
+function markClicked(link){
+  try{
+    const set = getClickedSet();
+    set.add(link);
+    localStorage.setItem(getClickedKey(), JSON.stringify([...set]));
+  } catch(e){}
+}
+
 function isSafeLink(url){
   if(!url) return false;
   const lower = url.toLowerCase();
@@ -86,6 +106,7 @@ async function loadMemes(){
     const lines = text.split("\n").filter(l => l.trim().length > 0);
     const rows = lines.slice(1).map(parseCSVLine); // skip header row
 
+    const clicked = getClickedSet();
     const items = rows
       .map(r => ({
         timestamp: r[0],
@@ -93,7 +114,8 @@ async function loadMemes(){
         email: (r.find(v => v && /\S+@\S+\.\S+/.test(v)) || "").trim()
       }))
       .filter(r => isWithinTodayAndWindow(r.timestamp))
-      .filter(r => isSafeLink(r.link));
+      .filter(r => isSafeLink(r.link))
+      .filter(r => !clicked.has(r.link));
 
     listEl.innerHTML = "";
     if(items.length === 0){
@@ -120,6 +142,10 @@ async function loadMemes(){
         a.textContent = item.link;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
+        a.addEventListener("click", () => {
+          markClicked(item.link);
+          li.remove();
+        });
         info.appendChild(a);
 
         if(item.email){
