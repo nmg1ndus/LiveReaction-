@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apna Meme Bhejo - Nondescript MG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrap">
+
+    <a class="nav-link" href="index.html">← Memes ki list dekho</a>
+
+    <span id="liveBadge" class="badge">LIVE ABHI CHAL RAHA HAI</span>
+    <span id="offlineBadge" class="badge offline" style="display:none;">ABHI LIVE NAHI HAI</span>
+
+    <h1>Apna meme bhejo,<br><span>Akele hasne me maza nahi</span> 😂</h1>
+    <p class="sub">Niche form mein apne meme ka link paste karo. Jo bhi select hoga, uska naam live mein lunga!</p>
+
+    <div id="liveSection" class="card">
+      <h2>Meme ka link daalo</h2>
+      <iframe class="form-frame"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSfd-D_bEKInrTz5ibeBWTiSBotq2-BNz7-R_cGUio0ZgLFrsg/viewform?embedded=true">
+      </iframe>
+      <p class="hint">Link paste karke "Submit" daba do. Bas itna karna hai.</p>
+    </div>
+
+    <div id="offlineSection" class="card" style="display:none; text-align:center;">
+      <p style="margin:0; color:var(--muted);">Submission sirf <b style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech khulta hai.<br>Live shuru hone par yahin aa jaana!</p>
+    </div>
+
+    <footer>
+      Made for <b>Nondescript MG</b> 🤡 — #LiveReaction
+    </footer>
+
+  </div>
+
+  <script>
+    // Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
+    const WINDOW_START = 18 * 60 + 30;
+    const WINDOW_END   = 20 * 60 + 30;
+
+    function isWithinLiveWindow(){
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      return minutes >= WINDOW_START && minutes <= WINDOW_END;
+    }
+
+    function updateLiveState(){
+      const live = isWithinLiveWindow();
+      document.getElementById("liveBadge").style.display = live ? "inline-flex" : "none";
+      document.getElementById("offlineBadge").style.display = live ? "none" : "inline-flex";
+      document.getElementById("liveSection").style.display = live ? "block" : "none";
+      document.getElementById("offlineSection").style.display = live ? "none" : "block";
+    }
+
+    updateLiveState();
+    setInterval(updateLiveState, 30000); // re-check every 30 seconds
+  </script>
+
+</body>
+</html>
+
