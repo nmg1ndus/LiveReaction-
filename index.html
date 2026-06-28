@@ -149,3 +149,52 @@
 
 </body>
 </html>
+
+        const items = rows
+          .map(r => ({ timestamp: r[0], link: (r[1] || "").trim() }))
+          .filter(r => isWithinTodayAndWindow(r.timestamp))
+          .filter(r => isSafeLink(r.link));
+
+        listEl.innerHTML = "";
+        if(items.length === 0){
+          statusEl.textContent = "Abhi tak koi meme nahi aaya (6:30-8:30 window mein).";
+        } else {
+          statusEl.textContent = items.length + " meme(s) mile.";
+          items.reverse().forEach(item => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.link;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            li.appendChild(a);
+            listEl.appendChild(li);
+          });
+        }
+      } catch(err){
+        statusEl.textContent = "List load nahi ho payi, thodi der baad try karo.";
+      }
+    }
+
+    function isWithinLiveWindow(){
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      return minutes >= WINDOW_START && minutes <= WINDOW_END;
+    }
+
+    function updateLiveState(){
+      const live = isWithinLiveWindow();
+      document.getElementById("liveBadge").style.display = live ? "inline-flex" : "none";
+      document.getElementById("offlineBadge").style.display = live ? "none" : "inline-flex";
+      document.getElementById("liveSection").style.display = live ? "block" : "none";
+      document.getElementById("offlineSection").style.display = live ? "none" : "block";
+      if(live) loadMemes();
+    }
+
+    updateLiveState();
+    setInterval(updateLiveState, 30000); // re-check every 30 seconds
+    setInterval(() => { if(isWithinLiveWindow()) loadMemes(); }, 10000); // refresh list every 10s while live
+  </script>
+
+</body>
+</html>
