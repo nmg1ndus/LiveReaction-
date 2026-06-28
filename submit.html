@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apna Meme Bhejo - Nondescript MG</title>
+<title>Nondescript MG - Live Meme List</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,27 +12,25 @@
 
     <div class="topbar">
       <div>
-        <span id="liveBadge" class="badge">LIVE CHAL RAHA HAI</span>
-        <span id="offlineBadge" class="badge offline" style="display:none;">LIVE AANE KA WAIT KARO</span>
+        <span id="liveBadge" class="badge">LIVE HAI</span>
+        <span id="offlineBadge" class="badge offline" style="display:none;">LIVE NAHI</span>
       </div>
       <div class="nav-buttons">
-        <a class="nav-btn" href="index.html">All Memes</a>
+        <a class="nav-btn" href="submit.html">Share Meme</a>
       </div>
     </div>
 
-    <h1>Apna meme bhejo,<br><span>akele hasne me maza nahi</span> 😂</h1>
-    <p class="sub">Niche form mein apne meme ka link paste karo. Jo bhi select hoga, uska naam live mein lunga!</p>
+    <h1>Aaj ke <span>memes</span>,<br>shaam 6:30 - 8:30</h1>
+    <p class="sub">Yahan vahi memes dikhenge jo aaj is window mein submit hue hain.</p>
 
     <div id="liveSection" class="card">
-      <h2>Meme ka link daalo</h2>
-      <iframe class="form-frame"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSfd-D_bEKInrTz5ibeBWTiSBotq2-BNz7-R_cGUio0ZgLFrsg/viewform?embedded=true">
-      </iframe>
-      <p class="hint">Link paste karke "Submit" daba do. Bas itna karna hai.</p>
+      <h2>Live Meme List</h2>
+      <div id="status" class="hint">Loading...</div>
+      <ul id="memeList" class="meme-list"></ul>
     </div>
 
     <div id="offlineSection" class="card" style="display:none; text-align:center;">
-      <p style="margin:0; color:var(--muted);">Submission sirf <b style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech khulta hai.<br>Live shuru hone par yahin aa jaana!</p>
+      <p style="margin:0; color:var(--muted);">List sirf <b style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech dikhti hai.<br>Live shuru hone par yahin aa jaana!</p>
     </div>
 
     <footer>
@@ -42,9 +40,91 @@
   </div>
 
   <script>
+    // CSV export link of the published Google Sheet (auto-derived from the pubhtml link)
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv";
+
     // Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
     const WINDOW_START = 18 * 60 + 30;
     const WINDOW_END   = 20 * 60 + 30;
+
+    // Basic safety blocklist - domains/keywords we never show
+    const BLOCKED_PATTERNS = [
+      "porn", "xvideos", "xnxx", "xxx", "onlyfans", "redtube", "xhamster",
+      "sex", "nsfw", "leak", "hack", "phish", "malware", "crack",
+      "bit.ly/free", "torrent"
+    ];
+
+    function isSafeLink(url){
+      if(!url) return false;
+      const lower = url.toLowerCase();
+      if(!lower.startsWith("http")) return false;
+      return !BLOCKED_PATTERNS.some(p => lower.includes(p));
+    }
+
+    function parseCSVLine(line){
+      // Handles quoted fields that may contain commas
+      const result = [];
+      let cur = "", inQuotes = false;
+      for(let i = 0; i < line.length; i++){
+        const ch = line[i];
+        if(ch === '"'){
+          if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if(ch === ',' && !inQuotes){
+          result.push(cur); cur = "";
+        } else cur += ch;
+      }
+      result.push(cur);
+      return result;
+    }
+
+    function isWithinTodayAndWindow(timestampStr){
+      const ts = new Date(timestampStr);
+      if(isNaN(ts.getTime())) return false;
+      const now = new Date();
+      const sameDay = ts.getFullYear() === now.getFullYear()
+                   && ts.getMonth() === now.getMonth()
+                   && ts.getDate() === now.getDate();
+      if(!sameDay) return false;
+      const minutes = ts.getHours() * 60 + ts.getMinutes();
+      return minutes >= WINDOW_START && minutes <= WINDOW_END;
+    }
+
+    async function loadMemes(){
+      const statusEl = document.getElementById("status");
+      const listEl = document.getElementById("memeList");
+      try{
+        const res = await fetch(CSV_URL + "&_=" + Date.now());
+        if(!res.ok) throw new Error("fetch failed");
+        const text = await res.text();
+        const lines = text.split("\n").filter(l => l.trim().length > 0);
+        const rows = lines.slice(1).map(parseCSVLine); // skip header row
+
+        const items = rows
+          .map(r => ({ timestamp: r[0], link: (r[1] || "").trim() }))
+          .filter(r => isWithinTodayAndWindow(r.timestamp))
+          .filter(r => isSafeLink(r.link));
+
+        listEl.innerHTML = "";
+        if(items.length === 0){
+          statusEl.textContent = "Abhi tak koi meme nahi aaya (6:30-8:30 window mein).";
+        } else {
+          statusEl.textContent = items.length + " meme(s) mile.";
+          items.reverse().forEach(item => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.link;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            li.appendChild(a);
+            listEl.appendChild(li);
+          });
+        }
+      } catch(err){
+        statusEl.textContent = "List load nahi ho payi, thodi der baad try karo.";
+      }
+    }
 
     function isWithinLiveWindow(){
       const now = new Date();
@@ -58,10 +138,12 @@
       document.getElementById("offlineBadge").style.display = live ? "none" : "inline-flex";
       document.getElementById("liveSection").style.display = live ? "block" : "none";
       document.getElementById("offlineSection").style.display = live ? "none" : "block";
+      if(live) loadMemes();
     }
 
     updateLiveState();
     setInterval(updateLiveState, 30000); // re-check every 30 seconds
+    setInterval(() => { if(isWithinLiveWindow()) loadMemes(); }, 10000); // refresh list every 10s while live
   </script>
 
 </body>
