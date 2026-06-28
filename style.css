@@ -130,17 +130,40 @@ h1 span{color:var(--orange);}
 }
 .meme-list li a:hover{ text-decoration:underline; }
 
-.nav-link{
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.nav-buttons{
+  display:flex;
+  gap:8px;
+}
+
+.nav-btn{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  color:var(--orange);
+  gap:5px;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid #3f3324;
+  background:var(--panel);
+  color:var(--cream);
   text-decoration:none;
   font-weight:600;
-  font-size:14px;
-  margin-bottom:18px;
+  font-size:13px;
+  white-space:nowrap;
 }
-.nav-link:hover{ text-decoration:underline; }
+.nav-btn:hover{ border-color:var(--orange); color:var(--orange); }
+.nav-btn.active{
+  background:var(--orange);
+  color:#1a1208;
+  border-color:var(--orange);
+}
 
 footer{
   text-align:center;
@@ -151,4 +174,3 @@ footer{
 }
 
 footer b{ color:var(--orange); }
-
