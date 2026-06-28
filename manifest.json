@@ -1,9 +1,9 @@
 {
-  "name": "LiveReaction - Aaj ka Meme Dose",
+  "name": "LiveReaction",
   "short_name": "LiveReaction",
   "description": "Live meme sharing platform during scheduled windows",
-  "start_url": "/LiveReaction-/",
-  "scope": "/LiveReaction-/",
+  "start_url": "https://nmg1ndus.github.io/LiveReaction-/",
+  "scope": "https://nmg1ndus.github.io/LiveReaction-/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#14110d",
