@@ -2,7 +2,7 @@
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv";
 
 // Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
-const WINDOW_START = 18 * 60 + 30;
+const WINDOW_START = 10 * 60 + 30;
 const WINDOW_END   = 20 * 60 + 30;
 
 // Basic safety blocklist - domains/keywords we never show
