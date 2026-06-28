@@ -10,19 +10,19 @@
   "theme_color": "#ff8a1e",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23ff8a1e' width='192' height='192'/><text x='96' y='120' font-size='80' font-weight='bold' text-anchor='middle' fill='%231a1208' font-family='Arial'>🔥</text></svg>",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23ff8a1e' width='192' height='192'/%3E%3Ctext x='96' y='120' font-size='80' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3E%F0%9F%98%82%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23ff8a1e' width='512' height='512'/><text x='256' y='360' font-size='200' font-weight='bold' text-anchor='middle' fill='%231a1208' font-family='Arial'>🔥</text></svg>",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23ff8a1e' width='512' height='512'/%3E%3Ctext x='256' y='360' font-size='200' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3E%F0%9F%98%82%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23ff8a1e' width='180' height='180'/><text x='90' y='135' font-size='100' font-weight='bold' text-anchor='middle' fill='%231a1208' font-family='Arial'>🔥</text></svg>",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%23ff8a1e' width='180' height='180'/%3E%3Ctext x='90' y='135' font-size='100' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3E%F0%9F%98%82%3C/text%3E%3C/svg%3E",
       "sizes": "180x180",
       "type": "image/svg+xml",
       "purpose": "maskable"
@@ -31,10 +31,16 @@
   "categories": ["entertainment", "lifestyle"],
   "screenshots": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%2314110d' width='540' height='720'/><rect fill='%231f1a14' x='20' y='80' width='500' height='200' rx='18'/><text x='270' y='180' font-size='24' font-weight='bold' text-anchor='middle' fill='%23ff8a1e'>Aaj ka Meme Dose</text></svg>",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'%3E%3Crect fill='%2314110d' width='540' height='720'/%3E%3Crect fill='%231f1a14' x='20' y='80' width='500' height='560' rx='10'/%3E%3Ctext x='270' y='360' font-size='48' font-weight='bold' text-anchor='middle' fill='%23ff8a1e' font-family='sans-serif'%3ELiveReaction%3C/text%3E%3Ctext x='270' y='420' font-size='24' text-anchor='middle' fill='%23999' font-family='sans-serif'%3EAaj ka Meme Dose%3C/text%3E%3C/svg%3E",
       "sizes": "540x720",
       "type": "image/svg+xml",
       "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'%3E%3Crect fill='%2314110d' width='1280' height='720'/%3E%3Crect fill='%231f1a14' x='40' y='60' width='1200' height='600' rx='10'/%3E%3Ctext x='640' y='360' font-size='64' font-weight='bold' text-anchor='middle' fill='%23ff8a1e' font-family='sans-serif'%3ELiveReaction%3C/text%3E%3Ctext x='640' y='420' font-size='32' text-anchor='middle' fill='%23999' font-family='sans-serif'%3EAaj ka Meme Dose%3C/text%3E%3C/svg%3E",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
     }
   ],
   "shortcuts": [
@@ -45,7 +51,7 @@
       "url": "/?utm_source=pwa_shortcut",
       "icons": [
         {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23ff8a1e' width='96' height='96'/><text x='48' y='72' font-size='40' font-weight='bold' text-anchor='middle' fill='%231a1208' font-family='Arial'>🔥</text></svg>",
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect fill='%23ff8a1e' width='96' height='96'/%3E%3Ctext x='48' y='72' font-size='40' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3E%F0%9F%98%82%3C/text%3E%3C/svg%3E",
           "sizes": "96x96",
           "type": "image/svg+xml"
         }
@@ -58,7 +64,7 @@
       "url": "/submit.html?utm_source=pwa_shortcut",
       "icons": [
         {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23ff8a1e' width='96' height='96'/><text x='48' y='72' font-size='40' font-weight='bold' text-anchor='middle' fill='%231a1208' font-family='Arial'>➕</text></svg>",
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect fill='%23ff8a1e' width='96' height='96'/%3E%3Ctext x='48' y='72' font-size='40' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3E%E2%AC%86%EF%B8%8F%3C/text%3E%3C/svg%3E",
           "sizes": "96x96",
           "type": "image/svg+xml"
         }
