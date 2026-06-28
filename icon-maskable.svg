@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Maskable icon (no transparency, fills entire canvas for adaptive icons) -->
+  <rect fill="#ff8a1e" width="180" height="180"/>
+  
+  <!-- Fire emoji centered -->
+  <text x="90" y="135" font-size="100" font-weight="bold" text-anchor="middle" fill="#1a1208" font-family="system-ui, -apple-system, sans-serif">🔥</text>
+</svg>
