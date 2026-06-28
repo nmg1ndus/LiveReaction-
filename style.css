@@ -44,6 +44,7 @@ body{
   padding:5px 12px;
   border-radius:999px;
   letter-spacing:.5px;
+  white-space:nowrap;
 }
 .badge::before{
   content:"";
@@ -134,14 +135,15 @@ h1 span{color:var(--orange);}
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
+  gap:8px;
+  flex-wrap:nowrap;
   margin-bottom:14px;
 }
 
 .nav-buttons{
   display:flex;
   gap:8px;
+  flex-shrink:0;
 }
 
 .nav-btn{
