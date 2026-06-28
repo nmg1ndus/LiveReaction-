@@ -8,12 +8,12 @@ LiveReaction is a lightweight web application that displays user-submitted meme 
 
 ### Key Features
 
-- 🔴 **Live Status Tracking** - Real-time indicator showing when the broadcast is live
-- 🎬 **YouTube Thumbnails** - Automatic thumbnail preview for YouTube links
-- 🛡️ **Content Safety** - Blocklist for inappropriate content
-- 📝 **Easy Submissions** - Embedded Google Form for meme submissions
-- 💾 **Auto-Refresh** - Live list updates every 10 seconds during broadcast window
-- 📱 **Responsive Design** - Works seamlessly on all devices
+- **Live Status Tracking** - Real-time indicator showing when the broadcast is live
+- **YouTube Thumbnails** - Automatic thumbnail preview for YouTube links
+- **Content Safety** - Blocklist for inappropriate content
+- **Easy Submissions** - Embedded Google Form for meme submissions
+- **Auto-Refresh** - Live list updates every 10 seconds during broadcast window
+- **Responsive Design** - Works seamlessly on all devices
 
 ## Project Structure
 
@@ -167,4 +167,4 @@ For issues or feature requests, please [open an issue](https://github.com/nmg1nd
 
 ---
 
-**Made with ❤️ for Nondescript MG** 🤡
+**Made with ❤️ for Nondescript MG**
