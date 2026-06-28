@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect fill="#ff8a1e" width="512" height="512"/>
+  
+  <!-- Gradient circle for depth -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffa94d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e3690a;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Fire emoji as main icon -->
+  <text x="256" y="380" font-size="280" font-weight="bold" text-anchor="middle" fill="#1a1208" font-family="system-ui, -apple-system, sans-serif">🔥</text>
+  
+  <!-- Shine effect -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.3"/>
+</svg>
