@@ -121,6 +121,30 @@ h1 span{color:var(--orange);}
   border:1px solid #352b1f;
   border-radius:10px;
   padding:10px 12px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.meme-thumb{
+  width:72px;
+  height:42px;
+  object-fit:cover;
+  border-radius:6px;
+  flex-shrink:0;
+  background:#1a1208;
+}
+
+.meme-info{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+
+.meme-email{
+  font-size:11px;
+  color:var(--muted);
 }
 
 .meme-list li a{
