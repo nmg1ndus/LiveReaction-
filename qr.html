@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan & Share - Nondescript MG</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .qr-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:18px;
+  }
+
+  .qr-card{
+    background:#ffffff;
+    border-radius:20px;
+    padding:18px;
+    box-shadow: 0 0 0 4px var(--orange), 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .qr-card img, .qr-card canvas{
+    display:block;
+    width:220px;
+    height:220px;
+  }
+
+  .qr-caption{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(24px, 6vw, 32px);
+    color:var(--cream);
+  }
+
+  .qr-caption span{ color:var(--orange); }
+
+  .qr-url{
+    font-size:13px;
+    color:var(--muted);
+    word-break:break-all;
+    max-width:320px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <div class="qr-wrap">
+      <span class="badge">📸 SCAN KARO</span>
+
+      <div class="qr-card">
+        <div id="qrcode"></div>
+      </div>
+
+      <div class="qr-caption">Apna <span>meme</span> bhejo!</div>
+      <div class="qr-url">nmg1ndus.github.io/LiveReaction-/submit.html</div>
+    </div>
+
+    <footer>
+      Made for <b>Nondescript MG</b> 🤡 — #LiveReaction
+    </footer>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://nmg1ndus.github.io/LiveReaction-/submit.html",
+      width: 220,
+      height: 220,
+      colorDark: "#1a1208",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+
+</body>
+</html>
+
