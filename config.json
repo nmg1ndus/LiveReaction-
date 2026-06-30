@@ -16,8 +16,8 @@
   "liveWindow": {
     "_comment": "Window during which the broadcast is considered LIVE and submissions/list refresh accordingly. Use 24-hour HH:MM. Set enabled:false to make it always-live (24x7).",
     "enabled": true,
-    "onlineTime": "11:30",
-    "endLiveTime": "20:30"
+    "onlineTime": "23:30",
+    "endLiveTime": "23:31"
   },
 
   "refresh": {
