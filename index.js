@@ -1,9 +1,9 @@
 // CSV export link of the published Google Sheet (auto-derived from the pubhtml link)
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv";
 
-// Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
-const WINDOW_START = 18 * 60 + 30;
-const WINDOW_END   = 20 * 60 + 30;
+// Live window: 24x7 (always active)
+const WINDOW_START = 0; // 12:00 AM
+const WINDOW_END   = 24 * 60; // 11:59 PM
 
 // Basic safety blocklist - domains/keywords we never show
 const BLOCKED_PATTERNS = [
@@ -119,7 +119,7 @@ async function loadMemes(){
 
     listEl.innerHTML = "";
     if(items.length === 0){
-      statusEl.textContent = "Abhi tak koi meme nahi aaya (6:30-8:30 window mein).";
+      statusEl.textContent = "Abhi tak koi meme nahi aaya.";
     } else {
       statusEl.textContent = items.length + " meme(s) mile.";
       items.reverse().forEach(item => {
