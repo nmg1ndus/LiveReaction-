@@ -25,7 +25,20 @@
     <p class="sub">Yahan vahi memes dikhenge jo aaj submit hue hain.</p>
 
     <div id="liveSection" class="card">
-      <h2>Live Meme List</h2>
+      <div class="card-header">
+        <div class="card-title-group">
+          <h2>Live Meme List</h2>
+          <button id="calendarBtn" class="calendar-btn" title="View memes from another date">📅</button>
+        </div>
+        <div id="datePickerPopup" class="date-picker-popup" style="display:none;">
+          <div class="date-picker-header">
+            <button id="prevMonth" class="date-nav-btn">❮</button>
+            <div id="monthYearDisplay" class="month-year">June 2026</div>
+            <button id="nextMonth" class="date-nav-btn">❯</button>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </div>
+      </div>
       <div id="status" class="hint">Loading...</div>
       <ul id="memeList" class="meme-list"></ul>
     </div>
