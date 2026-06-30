@@ -21,18 +21,14 @@
     </div>
 
     <h1>Apna meme bhejo,<br><span>akele hasne me maza nahi</span> 😂</h1>
-    <p class="sub">Niche form mein apne meme ka link paste karo. Jo bhi select hoga, uska naam live mein lunga!</p>
+    <p class="sub">Kabhi bhi bhej sakte ho — niche form mein apne meme ka link paste karo.</p>
 
-    <div id="liveSection" class="card">
+    <div class="card">
       <h2>Meme ka link daalo</h2>
       <iframe class="form-frame" id="memeFormFrame"
         src="">
       </iframe>
       <p class="hint">Link paste karke "Submit" daba do. Bas itna karna hai.</p>
-    </div>
-
-    <div id="offlineSection" class="card" style="display:none; text-align:center;">
-      <p style="margin:0; color:var(--muted);">Submission sirf <b id="windowText" style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech khulta hai.<br>Live shuru hone par yahin aa jaana!</p>
     </div>
 
     <footer>
@@ -45,8 +41,6 @@
   <script src="submit.js"></script>
   <script>
     document.getElementById("memeFormFrame").src = window.APP_CONFIG.googleForm.embedLink;
-    document.getElementById("windowText").textContent =
-      window.APP_CONFIG.liveWindow.onlineTime + " se " + window.APP_CONFIG.liveWindow.endLiveTime;
   </script>
 
 </body>
