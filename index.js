@@ -274,7 +274,7 @@ function updateCalendarButtonText(){
   if(selectedDate){
     btn.textContent = formatDateShort(selectedDate);
   } else {
-    btn.textContent = "Today";
+    btn.textContent = "Previous";
   }
 }
 
