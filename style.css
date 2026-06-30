@@ -31,6 +31,8 @@ body{
   flex:1;
   display:flex;
   flex-direction:column;
+  z-index: 1;
+  position: relative;
 }
 
 .badge{
@@ -183,12 +185,18 @@ h1 span{color:var(--orange);}
   font-weight:600;
   font-size:13px;
   white-space:nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .nav-btn:hover{ border-color:var(--orange); color:var(--orange); }
 .nav-btn.active{
   background:var(--orange);
   color:#1a1208;
   border-color:var(--orange);
+}
+
+.calendar-btn-topbar {
+  padding: 6px 12px;
 }
 
 footer{
@@ -201,51 +209,50 @@ footer{
 
 footer b{ color:var(--orange); }
 
-/* Calendar Date Picker Styles */
-.card-header {
-  position: relative;
-}
-
-.card-title-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.calendar-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background-color 0.2s, transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.calendar-btn:hover {
-  background-color: #352b1f;
-  transform: scale(1.1);
-}
-
-.calendar-btn:active {
-  transform: scale(0.95);
-}
-
-.date-picker-popup {
-  position: absolute;
-  top: calc(100% + 8px);
+/* Backdrop overlay */
+.backdrop {
+  position: fixed;
+  top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Bottom Modal Date Picker Styles */
+.date-picker-popup-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: var(--panel);
   border: 1px solid #352b1f;
-  border-radius: 12px;
-  padding: 16px;
-  z-index: 1000;
-  min-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-bottom: none;
+  border-radius: 18px 18px 0 0;
+  padding: 20px;
+  z-index: 999;
+  max-height: 60vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .date-picker-header {
@@ -351,12 +358,8 @@ footer b{ color:var(--orange); }
 }
 
 @media (max-width: 480px) {
-  .date-picker-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 260px;
-    max-width: 90vw;
+  .date-picker-popup-bottom {
+    max-height: 70vh;
+    padding: 16px;
   }
 }
