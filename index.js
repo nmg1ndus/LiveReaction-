@@ -106,6 +106,14 @@ function isWithinTodayAndWindow(timestampStr){
   return minutes >= WINDOW_START && minutes <= WINDOW_END;
 }
 
+function formatDateShort(date) {
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = date.getDate();
+  const month = monthNames[date.getMonth()];
+  return day + " " + month;
+}
+
 async function loadMemes(filterDate = null){
   const statusEl = document.getElementById("status");
   const listEl = document.getElementById("memeList");
@@ -234,6 +242,7 @@ function renderCalendarGrid(){
       dayCell.addEventListener("click", () => {
         selectedDate = cellDate;
         closeDatePicker();
+        updateCalendarButtonText();
         loadMemes(selectedDate);
       });
     }
@@ -247,22 +256,38 @@ function renderCalendarGrid(){
   }
 }
 
+function updateCalendarButtonText(){
+  const btn = document.getElementById("calendarBtnText");
+  if(selectedDate){
+    btn.textContent = formatDateShort(selectedDate);
+  } else {
+    btn.textContent = "Today";
+  }
+}
+
 function openDatePicker(){
   const popup = document.getElementById("datePickerPopup");
+  const backdrop = document.getElementById("backdrop");
   popup.style.display = "block";
+  backdrop.style.display = "block";
+  document.body.style.overflow = "hidden";
   currentPickerMonth = new Date(selectedDate || new Date());
   renderCalendarGrid();
 }
 
 function closeDatePicker(){
   const popup = document.getElementById("datePickerPopup");
+  const backdrop = document.getElementById("backdrop");
   popup.style.display = "none";
+  backdrop.style.display = "none";
+  document.body.style.overflow = "auto";
 }
 
 function initDatePicker(){
   const calendarBtn = document.getElementById("calendarBtn");
   const prevMonthBtn = document.getElementById("prevMonth");
   const nextMonthBtn = document.getElementById("nextMonth");
+  const backdrop = document.getElementById("backdrop");
   
   calendarBtn.addEventListener("click", () => {
     const popup = document.getElementById("datePickerPopup");
@@ -283,14 +308,16 @@ function initDatePicker(){
     renderCalendarGrid();
   });
   
-  // Close popup when clicking outside
-  document.addEventListener("click", (e) => {
-    const popup = document.getElementById("datePickerPopup");
-    const calendarBtn = document.getElementById("calendarBtn");
-    if(!popup.contains(e.target) && !calendarBtn.contains(e.target)){
-      closeDatePicker();
-    }
+  // Close popup when clicking backdrop
+  backdrop.addEventListener("click", closeDatePicker);
+  
+  // Prevent closing when clicking inside popup
+  document.getElementById("datePickerPopup").addEventListener("click", (e) => {
+    e.stopPropagation();
   });
+
+  // Update button text on load
+  updateCalendarButtonText();
 }
 
 function isWithinLiveWindow(){
