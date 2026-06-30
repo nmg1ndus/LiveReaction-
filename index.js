@@ -87,6 +87,19 @@ function isSameDateAsTarget(timestampStr, targetDate){
       && ts.getDate() === targetDate.getDate();
 }
 
+function isOnOrBeforeDate(timestampStr, targetDate){
+  const ts = new Date(timestampStr);
+  if(isNaN(ts.getTime())) return false;
+  const tsDay = new Date(ts.getFullYear(), ts.getMonth(), ts.getDate());
+  const targetDay = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+  return tsDay.getTime() <= targetDay.getTime();
+}
+
+function getItemDate(timestampStr){
+  const ts = new Date(timestampStr);
+  return new Date(ts.getFullYear(), ts.getMonth(), ts.getDate());
+}
+
 function isWithinTodayAndWindow(timestampStr){
   const ts = new Date(timestampStr);
   if(isNaN(ts.getTime())) return false;
@@ -119,23 +132,30 @@ async function loadMemes(filterDate = null){
     const rows = lines.slice(1).map(parseCSVLine); // skip header row
 
     const targetDate = filterDate || new Date();
-    const clicked = getClickedSet(targetDate);
     const items = rows
       .map(r => ({
         timestamp: r[0],
         link: (r.find(v => v && v.trim().toLowerCase().startsWith("http")) || "").trim(),
         email: (r.find(v => v && /\S+@\S+\.\S+/.test(v)) || "").trim()
       }))
-      .filter(r => isSameDateAsTarget(r.timestamp, targetDate))
       .filter(r => isSafeLink(r.link))
-      .filter(r => !clicked.has(r.link));
+      .filter(r => {
+        if(filterDate){
+          // Specific date picked from calendar: show only that day's unclicked links
+          if(!isSameDateAsTarget(r.timestamp, filterDate)) return false;
+          return !getClickedSet(filterDate).has(r.link);
+        }
+        // Default view: today + every earlier day, each unclicked link, regardless of date
+        if(!isOnOrBeforeDate(r.timestamp, targetDate)) return false;
+        return !getClickedSet(getItemDate(r.timestamp)).has(r.link);
+      });
 
     listEl.innerHTML = "";
     if(items.length === 0){
       if(filterDate){
-        statusEl.textContent = "Is date ko koi meme nahi mil.";
+        statusEl.textContent = "Is date ko koi meme nahi mila.";
       } else {
-        statusEl.textContent = "Abhi tak koi meme nahi aaya.";
+        statusEl.textContent = "Abhi tak koi naya meme nahi aaya.";
       }
     } else {
       statusEl.textContent = items.length + " meme(s) mile.";
@@ -160,7 +180,7 @@ async function loadMemes(filterDate = null){
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         a.addEventListener("click", () => {
-          markClicked(item.link, targetDate);
+          markClicked(item.link, filterDate || getItemDate(item.timestamp));
           li.remove();
         });
         info.appendChild(a);
