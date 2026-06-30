@@ -12,6 +12,10 @@ const BLOCKED_PATTERNS = [
   "bit.ly/free", "torrent"
 ];
 
+// State for date picker
+let selectedDate = null;
+let currentPickerMonth = new Date();
+
 function maskEmail(email){
   if(!email) return "";
   const parts = email.split("@");
@@ -39,23 +43,22 @@ function getYoutubeThumbnail(url){
   } catch(e){ return null; }
 }
 
-function getClickedKey(){
-  const d = new Date();
-  return "clickedMemes_" + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+function getClickedKey(date){
+  return "clickedMemes_" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 }
 
-function getClickedSet(){
+function getClickedSet(date){
   try{
-    const raw = localStorage.getItem(getClickedKey());
+    const raw = localStorage.getItem(getClickedKey(date));
     return raw ? new Set(JSON.parse(raw)) : new Set();
   } catch(e){ return new Set(); }
 }
 
-function markClicked(link){
+function markClicked(link, date){
   try{
-    const set = getClickedSet();
+    const set = getClickedSet(date);
     set.add(link);
-    localStorage.setItem(getClickedKey(), JSON.stringify([...set]));
+    localStorage.setItem(getClickedKey(date), JSON.stringify([...set]));
   } catch(e){}
 }
 
@@ -83,6 +86,14 @@ function parseCSVLine(line){
   return result;
 }
 
+function isSameDateAsTarget(timestampStr, targetDate){
+  const ts = new Date(timestampStr);
+  if(isNaN(ts.getTime())) return false;
+  return ts.getFullYear() === targetDate.getFullYear()
+      && ts.getMonth() === targetDate.getMonth()
+      && ts.getDate() === targetDate.getDate();
+}
+
 function isWithinTodayAndWindow(timestampStr){
   const ts = new Date(timestampStr);
   if(isNaN(ts.getTime())) return false;
@@ -95,7 +106,7 @@ function isWithinTodayAndWindow(timestampStr){
   return minutes >= WINDOW_START && minutes <= WINDOW_END;
 }
 
-async function loadMemes(){
+async function loadMemes(filterDate = null){
   const statusEl = document.getElementById("status");
   const listEl = document.getElementById("memeList");
   if(!statusEl || !listEl) return;
@@ -106,20 +117,25 @@ async function loadMemes(){
     const lines = text.split("\n").filter(l => l.trim().length > 0);
     const rows = lines.slice(1).map(parseCSVLine); // skip header row
 
-    const clicked = getClickedSet();
+    const targetDate = filterDate || new Date();
+    const clicked = getClickedSet(targetDate);
     const items = rows
       .map(r => ({
         timestamp: r[0],
         link: (r.find(v => v && v.trim().toLowerCase().startsWith("http")) || "").trim(),
         email: (r.find(v => v && /\S+@\S+\.\S+/.test(v)) || "").trim()
       }))
-      .filter(r => isWithinTodayAndWindow(r.timestamp))
+      .filter(r => isSameDateAsTarget(r.timestamp, targetDate))
       .filter(r => isSafeLink(r.link))
       .filter(r => !clicked.has(r.link));
 
     listEl.innerHTML = "";
     if(items.length === 0){
-      statusEl.textContent = "Abhi tak koi meme nahi aaya.";
+      if(filterDate){
+        statusEl.textContent = "Is date ko koi meme nahi mil.";
+      } else {
+        statusEl.textContent = "Abhi tak koi meme nahi aaya.";
+      }
     } else {
       statusEl.textContent = items.length + " meme(s) mile.";
       items.reverse().forEach(item => {
@@ -143,7 +159,7 @@ async function loadMemes(){
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         a.addEventListener("click", () => {
-          markClicked(item.link);
+          markClicked(item.link, targetDate);
           li.remove();
         });
         info.appendChild(a);
@@ -164,6 +180,119 @@ async function loadMemes(){
   }
 }
 
+function renderCalendarGrid(){
+  const grid = document.getElementById("calendarGrid");
+  const monthDisplay = document.getElementById("monthYearDisplay");
+  
+  // Update month/year display
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"];
+  monthDisplay.textContent = monthNames[currentPickerMonth.getMonth()] + " " + currentPickerMonth.getFullYear();
+  
+  // Clear grid
+  grid.innerHTML = "";
+  
+  // Add day headers (Sun-Sat)
+  const dayHeaders = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  dayHeaders.forEach(day => {
+    const header = document.createElement("div");
+    header.className = "calendar-day-header";
+    header.textContent = day;
+    grid.appendChild(header);
+  });
+  
+  // Get first day of month and number of days
+  const firstDay = new Date(currentPickerMonth.getFullYear(), currentPickerMonth.getMonth(), 1);
+  const lastDay = new Date(currentPickerMonth.getFullYear(), currentPickerMonth.getMonth() + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = firstDay.getDay();
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Add empty cells for days before month starts
+  for(let i = 0; i < startingDayOfWeek; i++){
+    const empty = document.createElement("div");
+    empty.className = "calendar-empty";
+    grid.appendChild(empty);
+  }
+  
+  // Add day cells
+  for(let day = 1; day <= daysInMonth; day++){
+    const dayCell = document.createElement("button");
+    dayCell.className = "calendar-day";
+    dayCell.textContent = day;
+    
+    const cellDate = new Date(currentPickerMonth.getFullYear(), currentPickerMonth.getMonth(), day);
+    cellDate.setHours(0, 0, 0, 0);
+    
+    // Disable future dates
+    if(cellDate > today){
+      dayCell.disabled = true;
+      dayCell.classList.add("calendar-future");
+    } else {
+      dayCell.addEventListener("click", () => {
+        selectedDate = cellDate;
+        closeDatePicker();
+        loadMemes(selectedDate);
+      });
+    }
+    
+    // Highlight selected date
+    if(selectedDate && cellDate.getTime() === selectedDate.getTime()){
+      dayCell.classList.add("calendar-selected");
+    }
+    
+    grid.appendChild(dayCell);
+  }
+}
+
+function openDatePicker(){
+  const popup = document.getElementById("datePickerPopup");
+  popup.style.display = "block";
+  currentPickerMonth = new Date(selectedDate || new Date());
+  renderCalendarGrid();
+}
+
+function closeDatePicker(){
+  const popup = document.getElementById("datePickerPopup");
+  popup.style.display = "none";
+}
+
+function initDatePicker(){
+  const calendarBtn = document.getElementById("calendarBtn");
+  const prevMonthBtn = document.getElementById("prevMonth");
+  const nextMonthBtn = document.getElementById("nextMonth");
+  
+  calendarBtn.addEventListener("click", () => {
+    const popup = document.getElementById("datePickerPopup");
+    if(popup.style.display === "none"){
+      openDatePicker();
+    } else {
+      closeDatePicker();
+    }
+  });
+  
+  prevMonthBtn.addEventListener("click", () => {
+    currentPickerMonth.setMonth(currentPickerMonth.getMonth() - 1);
+    renderCalendarGrid();
+  });
+  
+  nextMonthBtn.addEventListener("click", () => {
+    currentPickerMonth.setMonth(currentPickerMonth.getMonth() + 1);
+    renderCalendarGrid();
+  });
+  
+  // Close popup when clicking outside
+  document.addEventListener("click", (e) => {
+    const popup = document.getElementById("datePickerPopup");
+    const calendarBtn = document.getElementById("calendarBtn");
+    if(!popup.contains(e.target) && !calendarBtn.contains(e.target)){
+      closeDatePicker();
+    }
+  });
+}
+
 function isWithinLiveWindow(){
   const now = new Date();
   const minutes = now.getHours() * 60 + now.getMinutes();
@@ -180,9 +309,10 @@ function updateLiveState(){
   if(offlineBadge) offlineBadge.style.display = live ? "none" : "inline-flex";
   if(liveSection) liveSection.style.display = live ? "block" : "none";
   if(offlineSection) offlineSection.style.display = live ? "none" : "block";
-  if(live) loadMemes();
+  if(live && !selectedDate) loadMemes();
 }
 
 updateLiveState();
+initDatePicker();
 setInterval(updateLiveState, 30000); // re-check every 30 seconds
-setInterval(() => { if(isWithinLiveWindow()) loadMemes(); }, 10000); // refresh list every 10s while live
+setInterval(() => { if(isWithinLiveWindow() && !selectedDate) loadMemes(); }, 10000); // refresh list every 10s while live
