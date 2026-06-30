@@ -1,16 +1,9 @@
-// CSV export link of the published Google Sheet (auto-derived from the pubhtml link)
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv";
-
-// Live window: 24x7 (always active)
-const WINDOW_START = 0; // 12:00 AM
-const WINDOW_END   = 24 * 60; // 11:59 PM
-
-// Basic safety blocklist - domains/keywords we never show
-const BLOCKED_PATTERNS = [
-  "porn", "xvideos", "xnxx", "xxx", "onlyfans", "redtube", "xhamster",
-  "sex", "nsfw", "leak", "hack", "phish", "malware", "crack",
-  "bit.ly/free", "torrent"
-];
+// All links, timings, and settings now live in config.json (loaded by config.js,
+// which must be included before this file). See window.APP_CONFIG.
+const CSV_URL = window.APP_CONFIG.CSV_URL;
+const WINDOW_START = window.APP_CONFIG.WINDOW_START;
+const WINDOW_END = window.APP_CONFIG.WINDOW_END;
+const BLOCKED_PATTERNS = window.APP_CONFIG.BLOCKED_PATTERNS;
 
 // State for date picker
 let selectedDate = null;
@@ -341,5 +334,5 @@ function updateLiveState(){
 
 updateLiveState();
 initDatePicker();
-setInterval(updateLiveState, 30000); // re-check every 30 seconds
-setInterval(() => { if(isWithinLiveWindow() && !selectedDate) loadMemes(); }, 10000); // refresh list every 10s while live
+setInterval(updateLiveState, window.APP_CONFIG.refresh.liveStateCheckSeconds * 1000);
+setInterval(() => { if(isWithinLiveWindow() && !selectedDate) loadMemes(); }, window.APP_CONFIG.refresh.memeListRefreshSeconds * 1000);

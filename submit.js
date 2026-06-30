@@ -1,6 +1,6 @@
-// Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
-const WINDOW_START = 18 * 60 + 30;
-const WINDOW_END   = 20 * 60 + 30;
+// Live window now lives in config.json (loaded by config.js, included before this file).
+const WINDOW_START = window.APP_CONFIG.WINDOW_START;
+const WINDOW_END = window.APP_CONFIG.WINDOW_END;
 
 function isWithinLiveWindow(){
   const now = new Date();
@@ -21,5 +21,5 @@ function updateLiveState(){
 }
 
 updateLiveState();
-setInterval(updateLiveState, 30000); // re-check every 30 seconds
+setInterval(updateLiveState, window.APP_CONFIG.refresh.liveStateCheckSeconds * 1000);
 

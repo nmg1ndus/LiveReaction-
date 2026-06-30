@@ -1,0 +1,47 @@
+{
+  "_comment": "Edit this file to update links, timings, and behavior across the whole site. No code changes needed.",
+
+  "googleSheet": {
+    "_comment": "The published Google Sheet that stores meme submissions (File > Share > Publish to web > CSV).",
+    "csvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv",
+    "editLink": "https://docs.google.com/spreadsheets/d/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/edit"
+  },
+
+  "googleForm": {
+    "_comment": "Form used to collect meme submissions.",
+    "viewLink": "https://forms.gle/o2AyhpLEnczJxH9B9",
+    "embedLink": "https://docs.google.com/forms/d/e/1FAIpQLSfd-D_bEKInrTz5ibeBWTiSBotq2-BNz7-R_cGUio0ZgLFrsg/viewform?embedded=true"
+  },
+
+  "liveWindow": {
+    "_comment": "Window during which the broadcast is considered LIVE and submissions/list refresh accordingly. Use 24-hour HH:MM. Set enabled:false to make it always-live (24x7).",
+    "enabled": true,
+    "onlineTime": "18:30",
+    "endLiveTime": "20:30"
+  },
+
+  "refresh": {
+    "_comment": "How often (in seconds) things refresh.",
+    "memeListRefreshSeconds": 10,
+    "liveStateCheckSeconds": 30
+  },
+
+  "qrPage": {
+    "_comment": "What the QR code on the stream-overlay page points to. Usually the same as googleForm.viewLink.",
+    "targetUrl": "https://forms.gle/o2AyhpLEnczJxH9B9"
+  },
+
+  "site": {
+    "name": "Nondescript MG",
+    "hashtag": "#LiveReaction"
+  },
+
+  "safety": {
+    "_comment": "Links containing any of these keywords/domains are hidden from the list.",
+    "blockedPatterns": [
+      "porn", "xvideos", "xnxx", "xxx", "onlyfans", "redtube", "xhamster",
+      "sex", "nsfw", "leak", "hack", "phish", "malware", "crack",
+      "bit.ly/free", "torrent"
+    ]
+  }
+}

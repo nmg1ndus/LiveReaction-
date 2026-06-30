@@ -25,14 +25,14 @@
 
     <div id="liveSection" class="card">
       <h2>Meme ka link daalo</h2>
-      <iframe class="form-frame"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSfd-D_bEKInrTz5ibeBWTiSBotq2-BNz7-R_cGUio0ZgLFrsg/viewform?embedded=true">
+      <iframe class="form-frame" id="memeFormFrame"
+        src="">
       </iframe>
       <p class="hint">Link paste karke "Submit" daba do. Bas itna karna hai.</p>
     </div>
 
     <div id="offlineSection" class="card" style="display:none; text-align:center;">
-      <p style="margin:0; color:var(--muted);">Submission sirf <b style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech khulta hai.<br>Live shuru hone par yahin aa jaana!</p>
+      <p style="margin:0; color:var(--muted);">Submission sirf <b id="windowText" style="color:var(--orange);">shaam 6:30 se 8:30</b> ke beech khulta hai.<br>Live shuru hone par yahin aa jaana!</p>
     </div>
 
     <footer>
@@ -41,117 +41,12 @@
 
   </div>
 
+  <script src="config.js"></script>
   <script src="submit.js"></script>
-
-</body>
-</html>
-      
-
   <script>
-    // CSV export link of the published Google Sheet (auto-derived from the pubhtml link)
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuGfBisFb70c8P1S5IpcFo8xDySUCz7Ep9sqzar9isRGiDdcu8mdIzDvgB-rl_ZehybfEvkfjvsJrC/pub?output=csv";
-
-    // Live window: 6:30 PM to 8:30 PM (in minutes from midnight)
-    const WINDOW_START = 18 * 60 + 30;
-    const WINDOW_END   = 20 * 60 + 30;
-
-    // Basic safety blocklist - domains/keywords we never show
-    const BLOCKED_PATTERNS = [
-      "porn", "xvideos", "xnxx", "xxx", "onlyfans", "redtube", "xhamster",
-      "sex", "nsfw", "leak", "hack", "phish", "malware", "crack",
-      "bit.ly/free", "torrent"
-    ];
-
-    function isSafeLink(url){
-      if(!url) return false;
-      const lower = url.toLowerCase();
-      if(!lower.startsWith("http")) return false;
-      return !BLOCKED_PATTERNS.some(p => lower.includes(p));
-    }
-
-    function parseCSVLine(line){
-      // Handles quoted fields that may contain commas
-      const result = [];
-      let cur = "", inQuotes = false;
-      for(let i = 0; i < line.length; i++){
-        const ch = line[i];
-        if(ch === '"'){
-          if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
-          else inQuotes = !inQuotes;
-        } else if(ch === ',' && !inQuotes){
-          result.push(cur); cur = "";
-        } else cur += ch;
-      }
-      result.push(cur);
-      return result;
-    }
-
-    function isWithinTodayAndWindow(timestampStr){
-      const ts = new Date(timestampStr);
-      if(isNaN(ts.getTime())) return false;
-      const now = new Date();
-      const sameDay = ts.getFullYear() === now.getFullYear()
-                   && ts.getMonth() === now.getMonth()
-                   && ts.getDate() === now.getDate();
-      if(!sameDay) return false;
-      const minutes = ts.getHours() * 60 + ts.getMinutes();
-      return minutes >= WINDOW_START && minutes <= WINDOW_END;
-    }
-
-    async function loadMemes(){
-      const statusEl = document.getElementById("status");
-      const listEl = document.getElementById("memeList");
-      try{
-        const res = await fetch(CSV_URL + "&_=" + Date.now());
-        if(!res.ok) throw new Error("fetch failed");
-        const text = await res.text();
-        const lines = text.split("\n").filter(l => l.trim().length > 0);
-        const rows = lines.slice(1).map(parseCSVLine); // skip header row
-
-        const items = rows
-          .map(r => ({ timestamp: r[0], link: (r[1] || "").trim() }))
-          .filter(r => isWithinTodayAndWindow(r.timestamp))
-          .filter(r => isSafeLink(r.link));
-
-        listEl.innerHTML = "";
-        if(items.length === 0){
-          statusEl.textContent = "Abhi tak koi meme nahi aaya (6:30-8:30 window mein).";
-        } else {
-          statusEl.textContent = items.length + " meme(s) mile.";
-          items.reverse().forEach(item => {
-            const li = document.createElement("li");
-            const a = document.createElement("a");
-            a.href = item.link;
-            a.textContent = item.link;
-            a.target = "_blank";
-            a.rel = "noopener noreferrer";
-            li.appendChild(a);
-            listEl.appendChild(li);
-          });
-        }
-      } catch(err){
-        statusEl.textContent = "List load nahi ho payi, thodi der baad try karo.";
-      }
-    }
-
-    function isWithinLiveWindow(){
-      const now = new Date();
-      const minutes = now.getHours() * 60 + now.getMinutes();
-      return minutes >= WINDOW_START && minutes <= WINDOW_END;
-    }
-
-    function updateLiveState(){
-      const live = isWithinLiveWindow();
-      document.getElementById("liveBadge").style.display = live ? "inline-flex" : "none";
-      document.getElementById("offlineBadge").style.display = live ? "none" : "inline-flex";
-      document.getElementById("liveSection").style.display = live ? "block" : "none";
-      document.getElementById("offlineSection").style.display = live ? "none" : "block";
-      if(live) loadMemes();
-    }
-
-    updateLiveState();
-    setInterval(updateLiveState, 30000); // re-check every 30 seconds
-    setInterval(() => { if(isWithinLiveWindow()) loadMemes(); }, 10000); // refresh list every 10s while live
+    document.getElementById("memeFormFrame").src = window.APP_CONFIG.googleForm.embedLink;
+    document.getElementById("windowText").textContent =
+      window.APP_CONFIG.liveWindow.onlineTime + " se " + window.APP_CONFIG.liveWindow.endLiveTime;
   </script>
 
 </body>

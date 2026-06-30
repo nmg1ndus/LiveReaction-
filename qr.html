@@ -58,7 +58,7 @@
       </div>
 
       <div class="qr-caption">Apna <span>meme</span> bhejo!</div>
-      <div class="qr-url">https://forms.gle/o2AyhpLEnczJxH9B9</div>
+      <div class="qr-url" id="qrUrl"></div>
     </div>
 
     <footer>
@@ -67,10 +67,13 @@
 
   </div>
 
+  <script src="config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
+    const qrTarget = window.APP_CONFIG.qrPage.targetUrl || window.APP_CONFIG.googleForm.viewLink;
+    document.getElementById("qrUrl").textContent = qrTarget;
     new QRCode(document.getElementById("qrcode"), {
-      text: "https://forms.gle/o2AyhpLEnczJxH9B9",
+      text: qrTarget,
       width: 220,
       height: 220,
       colorDark: "#1a1208",
